@@ -10,11 +10,27 @@
 
 Before we start, please note:
 
-Executables for running the program were built on Fedora 36, meaning that it is not guaranteed to work on any other machine running different operating systems.
+Executables for running the program were built on Fedora 36, meaning that it is not guaranteed to work on any other machine running different operating systems. Therefore, it is recommended to run directly off of the source code instead of using executables.
 
 To build the executable on your own machine, please ensure that you have pyinstaller installed on your machine with the following command: 
 
 pip install pyinstaller
+
+After that, please run the following commands to build executables required to use the program:
+
+pyinstaller attacker.py --onefile --distpath ./
+
+pyinstaller accept_knock.py --onefile --distpath ./
+
+pyinstaller victim.py --onefile --distpath ./
+
+Then the following commands can be used to run each executable:
+
+sudo ./attacker
+
+sudo ./accept_knock
+
+sudo ./victim
 
 ### Victim
 Simply start the program with the command : sudo python victim.py, and it will authenticate & accept command packets from the attacker, and send the encrypted result back to the attacker. In addition to that, it will watch the specific directory set by the config file. When a file is created in that specific directory, it will perform port knocking to request access on a specific port, then send the created file over to the attacker. The port will stay open for set amount of time upon correct knock sequence is received on the attacker side, or until the transfer is completed.
