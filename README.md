@@ -12,7 +12,9 @@ Before we start, please note:
 
 Executables for running the program were built on Fedora 36, meaning that it is not guaranteed to work on any other machine running different operating systems.
 
-pip install 
+To build the executable on your own machine, please ensure that you have pyinstaller installed on your machine with the following command: 
+
+pip install pyinstaller
 
 ### Victim
 Simply start the program with the command : sudo python victim.py, and it will authenticate & accept command packets from the attacker, and send the encrypted result back to the attacker. In addition to that, it will watch the specific directory set by the config file. When a file is created in that specific directory, it will perform port knocking to request access on a specific port, then send the created file over to the attacker. The port will stay open for set amount of time upon correct knock sequence is received on the attacker side, or until the transfer is completed.
@@ -26,4 +28,17 @@ attacker.py is used to excute remote commands on the victim machine. Use the fol
 
 accept_knock.py is used for both keylogging and file/directory monitoring. While this is running, it will watch for a sequence of packets to allow access to specific ports for certain amount of time, which are all set in the config.ini file. When the correct sequence is received, it will start a server on the specified port to accept keylog files / created file in the monitored directory. Upon receiving the complete file or if the set amount of time is passed, the server will be closed.
 
+### Dependencies
+The program uses a few external libraries, including: 
+
+- scapy for manipulating / sniffing packets
+- keyboard for logging all key presses
+- setproctitle for masking the process name
+- watchdog for monitoring specific directories
+
+To install all of the above, please run the following command:
+
+- pip install scapy keyboard setproctitle watchdog 
+
+### Testing
 *Testing results are available on the report / documentation.*
