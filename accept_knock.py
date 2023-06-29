@@ -5,6 +5,7 @@ from scapy.all import *
 from scapy.layers.inet import UDP
 import socket
 
+
 keylog_index = 0
 monitor_index = 0
 
@@ -137,15 +138,16 @@ def main():
     if os.geteuid() != 0:
         sys.exit("Root privilege is required.")
     
-    print("Watching for port knocks until Ctrl + C is pressed...\n")
-
-    keylog_knock_process = Process(target=verify_keylog_knock)
-    monitor_knock_process = Process(target=verify_monitor_knock)
-
-    keylog_knock_process.start()
-    monitor_knock_process.start()
 
     try:
+        print("Watching for port knocks until Ctrl + C is pressed...\n")
+
+        keylog_knock_process = Process(target=verify_keylog_knock)
+        monitor_knock_process = Process(target=verify_monitor_knock)
+
+        keylog_knock_process.start()
+        monitor_knock_process.start()
+
         while True:
             pass
     except KeyboardInterrupt:

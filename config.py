@@ -8,10 +8,10 @@ victim_ip = config.get('ip', 'victim_ip')
 attacker_ip = config.get('ip', 'attacker_ip')
 
 # Ports used by the victim and the attacker
-victim_port = config.get('ports', 'victim_port')
-attacker_command_port = config.get('ports', 'attacker_command_port')
-attacker_keylogger_port = config.get('ports', 'attacker_keylogger_port')
-attacker_monitor_port = config.get('ports', 'attacker_monitor_port')
+victim_port = config.getint('ports', 'victim_port')
+attacker_command_port = config.getint('ports', 'attacker_command_port')
+attacker_keylogger_port = config.getint('ports', 'attacker_keylogger_port')
+attacker_monitor_port = config.getint('ports', 'attacker_monitor_port')
 
 # Mode to use, either TCP or UDP is supported.
 # This will only be applied to command send/receive feature, 
@@ -19,12 +19,16 @@ attacker_monitor_port = config.get('ports', 'attacker_monitor_port')
 protocol = config.get('mode', 'protocol')
 
 # Knock sequence to open attacker's ports for keylogging / file monitoring
-keylog_knock_sequence = config.get('knock_sequence', 'keylog_knock_sequence').split(',')
-monitor_knock_sequence = config.get('knock_sequence', 'monitor_knock_sequence').split(',')
+
+keylog_knock = config.get('knock_sequence', 'keylog_knock_sequence')
+monitor_knock = config.get('knock_sequence', 'monitor_knock_sequence')
+keylog_knock_sequence = [int(x) for x in keylog_knock.split(',')]
+monitor_knock_sequence = [int(x) for x in monitor_knock.split(',')]
+
 
 # Amount of time attacker will keep the port open before closing
-keylog_alive = config.get('server_alive', 'keylog_alive')
-monitor_alive = config.get('server_alive', 'monitor_alive')
+keylog_alive = config.getint('server_alive', 'keylog_alive')
+monitor_alive = config.getint('server_alive', 'monitor_alive')
 
 # Password to authenticate packets
 auth_password = config.get('auth', 'auth_password')

