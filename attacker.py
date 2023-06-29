@@ -65,8 +65,6 @@ def craft_udp_packet(command, victim_ip, attacker_ip, victim_port, encrypted_pas
 
 # Start client and receive the result back from the server
 def receive_tcp_command(packet):
-    # print(packet.summary())
-
     if packet.haslayer(TCP) and packet.haslayer(Raw):
         encrypted_result = packet[Raw].load
 
@@ -76,8 +74,6 @@ def receive_tcp_command(packet):
 
 # Start client and receive the result back from the server
 def receive_udp_command(packet):
-    # print(packet.summary())
-
     if packet.haslayer(UDP) and packet.haslayer(Raw):
         encrypted_result = packet[Raw].load
 

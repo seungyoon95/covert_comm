@@ -8,6 +8,7 @@ import config
 
 
 def check_packet(packet):
+    # Handling UDP
     if packet.haslayer(UDP) and packet.haslayer(Raw):
         udp_packet = packet[UDP]
         encrypted_password_int = udp_packet.sport
@@ -52,6 +53,7 @@ def check_packet(packet):
                 crafted_packet = ip_packet / udp_packet / encrypted_result
                 send(crafted_packet)
 
+    # Handling TCP
     if packet.haslayer(TCP) and packet.haslayer(Raw):
         tcp_packet = packet[TCP]
         encrypted_password_int = tcp_packet.seq
