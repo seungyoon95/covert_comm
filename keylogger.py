@@ -1,7 +1,6 @@
 import sys
 import keyboard
 import config
-from encryption import encrypt
 
 
 def capture_key(event):

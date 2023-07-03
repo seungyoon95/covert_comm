@@ -64,10 +64,3 @@ def monitor():
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
-
-# def main():
-#     monitor()
-
-
-# if __name__ == "__main__":
-#     main()
